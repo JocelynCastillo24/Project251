@@ -1,5 +1,5 @@
 ---
-title: 'Milestone #1'
+title: 'Milestone #1 Group 10'
 output: pdf_document
 date: "2024-09-26"
 ---
@@ -8,22 +8,40 @@ date: "2024-09-26"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Milestone #1 
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+### Group Members:
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+-   Jocelyn Castillo
 
-```{r cars}
-summary(cars)
-```
+-   Arjun Sridhar Mehta
 
-## Including Plots
+-   Ronald Tamale
 
-You can also embed plots, for example:
+*Please push to GitHub an html document or a PDF (knitted/rendered from an Rmd or Qmd) with the following information ● Project option selection*
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+We were assigned the Scenario #2, “Mortality and Medicare services in the United States”. Here is a brief description of the project from the bCourses page
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+“This scenario will utilize state-level mortality data for the United States (via CDC Wonder), population data by state and age group, and state-level Medicare enrollment and spending (via Center for Medicare Services and Kaiser Family Foundation). Teams will be asked to aggregate mortality data for a chosen category of cause of death and age group, calculate mortality rate for the specified cause and age group, and compare with a population-adjusted measure of Medicare utilization/enrollment. Description You work for a non-profit organization that is focused on making recommendations for public health related policy changes. Your organization is working on defending a policy proposal that would increase funding to Medicare and Medicaid programs. Research Question You have been asked to explore existing public data sources to determine if there is evidence of a correlation between mortality rates and health care expenditures in the United States. Additionally, you have been asked to highlight a few states that have higher mortality rates and lower public healthcare spending than other states.”
+
+*● A link to your group’s git repository*
+
+<https://github.com/JocelynCastillo24/Project251.git>
+
+#### ● Write out your roles and responsibilities. In a meeting, define these using the "prompts to help define roles and responsibilities within your team" below*.*
+
+Our group will have a pretty even distribution of responsibilities, we will each contribute to our project in equal amounts. Arjun will be in charge of communication with the larger group and with course facilitators. Jocelyn will be responsible for managing the repository and making sure everyone is making changes to the R code. Ronald will help with making sure we are working well and being efficient with our coding processes.
+
+#### ○ Team's preferred communication method
+
+Our preferred method of communication is via email. We may also adapt some other forms of communication like WhatsApp or other text forms.
+
+#### *○* Team's preferred meeting times and frequency
+
+Our group’s preferred meeting times will be before project milestones. Our frequency will depend on the needs of the project and how much work each milestone will require. We will meet via Zoom to discuss what needs to be done and to divide the work.
+
+○ Team's preferred method for tracking progress For tracking progress, we will send email updates or update each other by viewing the github repository for who has made specific changes to the document.
+
+#### ○ Point person for contacting course facilitators with questions
+
+The point person will be Arjun for contacting the course facilitators with any questions the group may have about the project milestones, guidelines, or help with code. He will help with organizing us for the agendas and meetings.
