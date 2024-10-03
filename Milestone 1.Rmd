@@ -8,7 +8,7 @@ date: "2024-09-26"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Milestone #1 
+## Group 10: Milestone #1
 
 ### Group Members:
 
@@ -34,7 +34,7 @@ Our group will have a pretty even distribution of responsibilities, we will each
 
 #### ○ Team's preferred communication method
 
-Our preferred method of communication is via email. We may also adapt some other forms of communication like WhatsApp or other text forms.
+Our preferred method of communication is via email. We have also created a Whatsapp group as an alternative method for quick check-ins and reminders.
 
 #### *○* Team's preferred meeting times and frequency
 
@@ -45,3 +45,7 @@ Our group’s preferred meeting times will be before project milestones. Our fre
 #### ○ Point person for contacting course facilitators with questions
 
 The point person will be Arjun for contacting the course facilitators with any questions the group may have about the project milestones, guidelines, or help with code. He will help with organizing us for the agendas and meetings.
+
+-   **Conflict Management**
+
+If a conflict arises, we shall use the Zoom platform to hold open and respectful discussions. I we are unable to resolve the conflict, we shall quickly seek advice from the instructional team.
