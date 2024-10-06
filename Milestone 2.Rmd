@@ -1,0 +1,41 @@
+---
+title: "Milestone 2"
+output: html_document
+date: "2024-10-06"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+```
+
+
+
+```{r}
+# Loading necessary libraries
+library(readr)
+library(dplyr)
+
+# Importing the medicare csv dataset and cleaning column names
+medicare_data_csv <- "kff_cms_medicare_state_summary.csv"
+medicare_data <- read_csv(medicare_data_csv)
+
+head(medicare_data)
+
+medicaid_data_csv <-"kff_cms_medicaid_state_summary.csv"
+medicaid_data <- read_csv(medicaid_data_csv)
+head(medicaid_data)
+
+cdc_wonder_mortality_csv <- "cdc_wonder_mortality.csv"
+cdc_wonder_mortality_data <- read_csv(cdc_wonder_mortality_csv)
+head(cdc_wonder_mortality_data)
+
+cdc_wonder_population_csv <- "cdc_wonder_population.csv"
+cdc_wonder_populaiton_data <- read_csv(cdc_wonder_population_csv)
+head(cdc_wonder_populaiton_data)
+```
+
+`
+
+
