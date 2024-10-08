@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(readr)
 library(dplyr)
+library(janitor)
 
 medicare_data_csv <- "kff_cms_medicare_state_summary.csv"
 
@@ -33,6 +34,8 @@ medicare_data <- read_csv(
   col_names = TRUE,
   na = c("", "NA", "NULL")
 )
+
+medicare_data <- medicare_data %>%  clean_names()
 
 head(medicare_data)
 
@@ -69,6 +72,8 @@ head(medicare_data)
 ```{r}
 library(readr)
 library(dplyr)
+library(janitor)
+
 medicaid_data_csv <-"kff_cms_medicaid_state_summary.csv"
 medicaid_data <- read_csv(
   file = medicaid_data_csv,
@@ -91,6 +96,8 @@ medicaid_data <- read_csv(
   na = c("", "NA", "NULL")
 )
 
+medicaid_data <- medicaid_data %>%
+  clean_names()
 
 head(medicaid_data)
 
@@ -122,6 +129,8 @@ head(medicaid_data)
 ```{r}
 library(readr)
 library(dplyr)
+library(janitor)
+
 cdc_wonder_mortality_data <- read_csv(
   file = cdc_wonder_mortality_csv,
   col_types = cols(
@@ -136,6 +145,9 @@ cdc_wonder_mortality_data <- read_csv(
   col_names = TRUE,
   na = c("", "NA", "NULL")
 )
+
+cdc_wonder_mortality_data <- cdc_wonder_mortality_data %>%
+  clean_names()
 
 head(cdc_wonder_mortality_data)
 
@@ -168,6 +180,7 @@ head(cdc_wonder_mortality_data)
 ```{r}
 library(readr)
 library(dplyr)
+library(janitor)
 
 cdc_wonder_population_data <- read_csv(
   file = cdc_wonder_population_csv,
@@ -180,6 +193,8 @@ cdc_wonder_population_data <- read_csv(
   na = c("", "NA", "NULL")
 )
 
+cdc_wonder_population_data <- cdc_wonder_population_data %>%
+  clean_names()
 
 head(cdc_wonder_population_data)
 
