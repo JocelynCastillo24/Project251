@@ -1,5 +1,5 @@
 ---
-title: "Milestone 2"
+title: "Milestone 2 GROUP 10"
 output: html_document
 date: "2024-10-06"
 ---
@@ -10,32 +10,199 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```
 
-
-
 ```{r}
-# Loading necessary libraries
 library(readr)
 library(dplyr)
 
-# Importing the medicare csv dataset and cleaning column names
 medicare_data_csv <- "kff_cms_medicare_state_summary.csv"
-medicare_data <- read_csv(medicare_data_csv)
+
+medicare_data <- read_csv(
+  file = medicare_data_csv,
+ col_types = cols(
+    Location = col_character(), 
+    `Total Traditional Medicare Part A and/or Part B Enrollees` = col_double(),
+    `Total Medicare Part A and/or Part B Persons With Utilization` = col_double(),
+    `Total Medicare Part A and/or Part B Program Payments` = col_double(),
+    `Total Traditional Medicare Part A Enrollees` = col_double(),
+    `Total Medicare Part A Persons With Utilization` = col_double(),
+    `Total Medicare Part A Program Payments` = col_double(),
+    `Total Traditional Medicare Part B Enrollees` = col_double(),
+    `Total Medicare Part B Persons With Utilization` = col_double(),
+    `Total Medicare Part B Program Payments` = col_double()
+  ),
+  col_names = TRUE,
+  na = c("", "NA", "NULL")
+)
 
 head(medicare_data)
 
-medicaid_data_csv <-"kff_cms_medicaid_state_summary.csv"
-medicaid_data <- read_csv(medicaid_data_csv)
-head(medicaid_data)
 
-cdc_wonder_mortality_csv <- "cdc_wonder_mortality.csv"
-cdc_wonder_mortality_data <- read_csv(cdc_wonder_mortality_csv)
-head(cdc_wonder_mortality_data)
+#Description of dataset:
+#What is the data source? (1-2 sentences on where the data is coming from, dates included, etc.)
 
-cdc_wonder_population_csv <- "cdc_wonder_population.csv"
-cdc_wonder_populaiton_data <- read_csv(cdc_wonder_population_csv)
-head(cdc_wonder_populaiton_data)
+#The data is retrieved from Kaiser Family Foundation website. It contains US state-level data on enrollment, utilization, and total spending for Medicare parts A and B from 2021. Medicare eligibility typically is for adults age 65 and over.
+
+#Sources
+#Centers for Medicare & Medicaid Services, Office of Enterprise Data and Analytics, Chronic Conditions Data Warehouse.
+
+#How does the dataset relate to the group problem statement and question?
+
+#The dataset contains information on Medicare spending by state, which is a significant portion of public healthcare spending in the U.S. This data will help us quantify healthcare expenditures for each state, allowing us to explore whether states with higher or lower Medicare spending have different mortality rates.
+#Our problem statement is concerned with mortality rates. To explore the relationship, we shall combine the Medicare dataset with another dataset that provides mortality rates. We shall then analyze correlations between Medicare spending per state and mortality rates to see if there is an association.
+#We shall run a statistical analysis to determine if there’s a relationship between higher spending and lower mortality, or vice versa This will help in understanding whether states with lower public healthcare spending tend to have higher mortality rates.
+
+
+#Import Process:
+#We loaded the readr package: This package provides a fast and friendly way to read rectangular data like CSV files.
+
+#We then specified the file path: The variable medicare_data_csv holds the path to the CSV file.
+
+#We Read the CSV file: The read_csv function was used to import the data. We specified:
+
+#col_types: Defining the data types for each column.
+#col_names: Set to TRUE beacuse the first row contains column names.
+#na: Definng which strings should be considered as missing values.
+#View the data: Use head() to display the first few rows of the dataset to verify the import.
+
 ```
 
-`
+```{r}
+library(readr)
+library(dplyr)
+medicaid_data_csv <-"kff_cms_medicaid_state_summary.csv"
+medicaid_data <- read_csv(
+  file = medicaid_data_csv,
+  col_types = cols(
+    Location = col_character(), 
+    `Seniors Spending` = col_double(),
+    `Individuals with Disabilities Spending` = col_double(),
+    `Adult Spending` = col_double(),
+    `Children Spending` = col_double(),
+    `Newly Eligible Adult Spending` = col_double(),
+    `Total Spending` = col_double(),
+    `Seniors Enrollment` = col_double(),
+    `Individuals with Disabilities Enrollment` = col_double(),
+    `Adult Enrollment` = col_double(),
+    `Children Enrollment` = col_double(),
+    `Newly Eligible Adult Enrollment` = col_double(),
+    `Total Enrollment` = col_double()
+  ),
+  col_names = TRUE,
+  na = c("", "NA", "NULL")
+)
 
 
+head(medicaid_data)
+
+#What is the data source? (1-2 sentences on where the data is coming from, dates included, etc.)
+
+#The data is retrieved from Kaiser Family Foundation website. It contains US state-level data on Medicaid enrollment and spending by age group from 2021.
+ 
+#Sources
+#KFF analysis of the T-MSIS Research Identifiable Files, 2021
+
+#How does the dataset relate to the group problem statement and question?
+  
+#The dataset on Medicaid spending provides valuable insight into healthcare expenditures for a segment of the population that is highly dependent on public health services. It breaks down Medicaid spending by state, which allows for comparison of healthcare expenditures between states. This aligns with the need to explore differences in spending across the U.S. and identify states where public healthcare spending is lower than others.
+#To explore the correlation between mortality rates and health care expenditures, the Medicaid spending data will be analyzed alongside another dataset containing state-wise mortality rates. If we observe a pattern—such as higher mortality rates in states with lower Medicaid spending—this could support or refute the hypothesis of a relationship between healthcare spending and mortality.
+#By comparing the spending data with mortality data, we can also identify states that deviate from the general trend. For example: states with high mortality rates but low Medicaid spending could indicate potential areas of underfunding or underserved populations. Conversely, states with low mortality rates and high Medicaid spending may suggest more effective healthcare delivery.
+#We shall also Identify and highlight states that have a significant disparity between mortality rates and healthcare spending, especially those with high mortality and low Medicaid spending.
+
+#Import Process:
+#We loaded the readr package: This package provides a fast and friendly way to read rectangular data like CSV files.
+#We then specified the file path: The variable medicaid_data_csv holds the path to the CSV file.
+#We Read the CSV file: The read_csv function was used to import the data. We specified:
+#col_types: Defining the data types for each column.
+#col_names: Set to TRUE beacuse the first row contains column names.
+#na: Definng which strings should be considered as missing values.
+#View the data: Use head() to display the first few rows of the dataset to verify the import.
+
+```
+
+```{r}
+library(readr)
+library(dplyr)
+cdc_wonder_mortality_data <- read_csv(
+  file = cdc_wonder_mortality_csv,
+  col_types = cols(
+    `Residence State` = col_character(),  
+    `Residence State Code` = col_integer(),  
+    `UCD - ICD Sub-Chapter` = col_character(),  
+    `UCD - ICD Sub-Chapter Code` = col_character(),  
+    `Ten-Year Age Groups` = col_character(),  
+    `Ten-Year Age Groups Code` = col_character(),  
+    Deaths = col_integer()
+  ),
+  col_names = TRUE,
+  na = c("", "NA", "NULL")
+)
+
+head(cdc_wonder_mortality_data)
+
+#What is the data source? (1-2 sentences on where the data is coming from, dates included, etc.)
+
+#The data set contains mortality counts for the year 2021 by state, age group, and underlying cause of death (original dataset from CDC WONDER website.
+                                                                                                             
+#How does the dataset relate to the group problem statement and question?
+
+#This dataset provides the number of deaths by age group, cause of death (ICD codes), and state. This will be the primary dataset used to assess mortality rates across different states, which is a key component of the problem statement. We shall calculate mortality rates for each state and compare them against the healthcare expenditure data.
+#It breaks down deaths by state, allowing us to link the mortality information with the Medicaid or Medicare spending datasets from KFF. This linkage is necessary to explore the relationship between mortality rates and healthcare spending on a state-by-state basis. It also provides detailed breakdowns of deaths by age group and by specific causes (ICD codes). While this is not directly mentioned in the problem statement, this information could be used to provide deeper insights. For example, certain age groups or causes of death might show stronger correlations with healthcare spending (e.g., higher spending in a state might result in fewer deaths from preventable conditions).
+#We shall identify states that stand out. For example, states with high mortality rates but low public healthcare spending could indicate underinvestment in healthcare.
+
+#Import process
+#Loaded Required Libraries:
+#readr: For reading CSV files.
+#dplyr: For data manipulation (though not used directly in this import).
+
+#Read the CSV File:
+#read_csv: Function used to import the CSV file.
+#file: Specified the CSV file path stored in cdc_wonder_mortality_csv.
+#Specified Column Types:
+#col_types: Defined the data types for each column using cols().
+#col_names = TRUE: Indicates that the first row contains column names.
+#Handled Missing Values:na = c("", "NA", "NULL"): Specifies strings to be treated as missing values.
+#head(): Displayed the first six rows of the imported data to verify the import.
+
+```
+
+```{r}
+library(readr)
+library(dplyr)
+
+cdc_wonder_population_data <- read_csv(
+  file = cdc_wonder_population_csv,
+  col_types = cols(
+    State = col_character(),
+    `Ten-Year Age Groups` = col_character(),
+    Population = col_integer()  
+  ),
+  col_names = TRUE,
+  na = c("", "NA", "NULL")
+)
+
+
+head(cdc_wonder_population_data)
+
+#What is the data source? (1-2 sentences on where the data is coming from, dates included, etc.)
+
+#The dataset contains population denominators for each US state and age group retrieved from CDC WONDER website.
+
+#How does the dataset relate to the group problem statement and question?
+
+#Mortality rates are typically calculated as the number of deaths per 1,000 or 100,000 individuals in a given population. To compute these rates for each state and age group, we need both the death counts (from the mortality dataset) and the population size (from this dataset). The population data by age group allows us to accurately adjust the mortality rates based on the size of each age cohort, making the rates more meaningful and comparable across states.
+#Also, different states have varying age distributions, and older populations tend to have higher mortality rates. Using this population data, we can calculate age-adjusted mortality rates, which control for differences in the age structure between states. This allows for a fair comparison of mortality rates across states with different demographics.
+#We shall also compute per capita healthcare spending (i.e., healthcare expenditures per person). This metric is crucial for assessing whether states with higher spending per person have better health outcomes (lower mortality rates). This population data helps normalize healthcare spending, enabling a more meaningful comparison between states, especially when looking at states with similar population sizes but different spending levels and health outcomes.
+#Once the mortality rates are calculated using this population data, we shall explore whether states with higher populations in specific age groups (e.g., elderly) have higher healthcare spending and/or higher mortality rates. 
+
+#Import process
+#Read the CSV File:
+#read_csv: Function used to import the CSV file.
+#file: Specified the CSV file path stored in cdc_wonder_population_csv.
+#Specified Column Types:
+#col_types: Defined the data types for each column using cols().
+#col_names = TRUE: Indicates that the first row contains column names.
+#Handled Missing Values:na = c("", "NA", "NULL"): Specifies strings to be treated as missing values.
+#head(): Displayed the first six rows of the imported data to verify the import.
+```
+
+\`
