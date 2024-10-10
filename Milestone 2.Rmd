@@ -15,22 +15,20 @@ library(readr)
 library(dplyr)
 library(janitor)
 
-medicaid_data_csv <- read_csv("kff_cms_medicaid_state_summary.csv")
-
-
+medicare_data_csv <- "kff_cms_medicare_state_summary.csv"
 medicare_data <- read_csv(
   file = medicare_data_csv,
- col_types = cols(
-    Location = col_character(), 
+  col_types = cols(
+    Location = col_character(),  
     `Total Traditional Medicare Part A and/or Part B Enrollees` = col_double(),
     `Total Medicare Part A and/or Part B Persons With Utilization` = col_double(),
-    `Total Medicare Part A and/or Part B Program Payments` = col_double(),
+    `Total Medicare Part A and/or Part B Program Payments` = col_character(),
     `Total Traditional Medicare Part A Enrollees` = col_double(),
     `Total Medicare Part A Persons With Utilization` = col_double(),
-    `Total Medicare Part A Program Payments` = col_double(),
+    `Total Medicare Part A Program Payments` = col_character(),
     `Total Traditional Medicare Part B Enrollees` = col_double(),
     `Total Medicare Part B Persons With Utilization` = col_double(),
-    `Total Medicare Part B Program Payments` = col_double()
+    `Total Medicare Part B Program Payments` = col_character()
   ),
   col_names = TRUE,
   na = c("", "NA", "NULL")
@@ -70,12 +68,12 @@ medicaid_data <- read_csv(
   file = medicaid_data_csv,
   col_types = cols(
     Location = col_character(), 
-    `Seniors Spending` = col_double(),
-    `Individuals with Disabilities Spending` = col_double(),
-    `Adult Spending` = col_double(),
-    `Children Spending` = col_double(),
-    `Newly Eligible Adult Spending` = col_double(),
-    `Total Spending` = col_double(),
+    `Seniors Spending` = col_character(),
+    `Individuals with Disabilities Spending` = col_character(),
+    `Adult Spending` = col_character(),
+    `Children Spending` = col_character(),
+    `Newly Eligible Adult Spending` = col_character(),
+    `Total Spending` = col_character(),
     `Seniors Enrollment` = col_double(),
     `Individuals with Disabilities Enrollment` = col_double(),
     `Adult Enrollment` = col_double(),
