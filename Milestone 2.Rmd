@@ -37,6 +37,7 @@ medicare_data <- read_csv(
 medicare_data <- medicare_data %>%  clean_names()
 
 head(medicare_data)
+summary(medicare_data)
 
 ```
 
