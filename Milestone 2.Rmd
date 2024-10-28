@@ -39,6 +39,7 @@ medicare_data <- medicare_data %>%  clean_names()
 head(medicare_data)
 summary(medicare_data)
 
+
 ```
 
 MEDICARE ENROLMENT AND SPENDING DATA
