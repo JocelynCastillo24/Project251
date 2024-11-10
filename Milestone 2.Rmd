@@ -221,3 +221,11 @@ The Medicaid Dataset has Senior Spending, Adult Spending, Total Spending, and Ch
 To analyze correlations between Medicare/Medicaid spending per state and population/mortality rates, we will ensure that the "Residence.State.Code" and "Deaths" columns are numeric, as they will be used in quantitative analysis. The "Ten.Year.Age.Groups.Code" might also need conversion if age group analysis is required. The "Residence.State" and "UCD...ICD.Sub.Chapter" columns should remain as character or factor types for categorical analysis.
 
 \`
+```{r}
+write.csv(cdc_wonder_mortality_data, "cdc_wonder_mortality_data_cleaned.csv", row.names = FALSE)
+write.csv(cdc_wonder_population_data, "cdc_wonder_population_data_cleaned.csv", row.names = FALSE)
+write.csv(medicaid_data, "medicaid_data_cleaned.csv", row.names = FALSE)
+write.csv(medicare_data, "medicare_data_cleaned.csv", row.names = FALSE)
+
+```
+
