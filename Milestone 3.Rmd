@@ -25,7 +25,9 @@ head(cdc_wonder_mortality_data)
 head(cdc_wonder_population_data)
 ```
 ##RECODING COMMON VARIABLES TO BE COMBINED WITH OTHER DATA SETS
+
 #Renamed the first column to residence_state as is in the mortatility data sets, select the first three columns with totals on enrolemnt, utilisation  and payments, and remove the "UNITED STATES" row with totals. We have capitalised each word in the sate name bu converted them to lower case as is the case in the mortality dataset.
+#Removed dollar signs and commas from the program payments, then converted the column data to numeric.
 
 ``` {r}
 library(stringr)
@@ -42,8 +44,13 @@ medicare_data_modified <- medicare_data %>%
     residence_state = ifelse(residence_state == "District Of Columbia", "District of Columbia", residence_state)
   )
 
+medicare_data_modified <- medicare_data_modified %>%
+  mutate(total_medicare_part_a_and_or_part_b_program_payments = 
+           as.numeric(gsub("[\\$,]", "", total_medicare_part_a_and_or_part_b_program_payments)))
 
 head(medicare_data_modified)
+
+str(medicare_data_modified)
 ```
 #RECODING FOR CDC MORTAILITY DATA
 ``` {r}
