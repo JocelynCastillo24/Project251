@@ -8,12 +8,51 @@ date: "2024-11-10"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## We exported cleaned data sets for medicare, medicaid, mortality and population data as csv files into our Project 251 folder. We shall now import the medicare, mortality and population cleaned data sets into the Milestone 3 Rmd file for preparation for further analysis. 
+## We exported cleaned data sets for medicare, medicaid, mortality and population data as csv files into our Project 251 folder from Milestone 2 Rmd file. We shall now import the medicare, mortality and population cleaned data sets into the Milestone 3 Rmd file for preparation for further analysis. 
 
-#We have chosen to use the medicare data (65+) to be prepared for merging with mortality and population data.
+#We have chosen to use the medicare data (65+) to be prepared for merging with mortality and population data sets.
 
 ```{r}
+library(readr)
+medicare_data <- read_csv('medicare_data_cleaned.csv')
+medicaid_data <- read_csv('medicaid_data_cleaned.csv')
+cdc_wonder_mortality_data <- read_csv("cdc_wonder_mortality_data_cleaned.csv")
+cdc_wonder_population_data <- read_csv("cdc_wonder_population_data_cleaned.csv")
+
+head(medicaid_data)
+head(medicare_data)
+head(cdc_wonder_mortality_data)
+head(cdc_wonder_population_data)
+```
+##RECODING COMMON VARIABLES TO BE COMBINED WITH OTHER DATA SETS
+#Renamed the first column to residence_state as is in the mortatility data sets, select the first three columns with totals on enrolemnt, utilisation  and payments, and remove the "UNITED STATES" row with totals. We have capitalised each word in the sate name bu converted them to lower case as is the case in the mortality dataset.
+
+``` {r}
+library(stringr)
+library(dplyr)
+
+medicare_data_modified <- medicare_data %>% 
+  select(residence_state = location, 
+         total_traditional_medicare_part_a_and_or_part_b_enrollees, 
+         total_medicare_part_a_and_or_part_b_persons_with_utilization, 
+         total_medicare_part_a_and_or_part_b_program_payments) %>% 
+  filter(residence_state != 'UNITED STATES') %>%
+  mutate(
+    residence_state = str_to_title(tolower(residence_state)), 
+    residence_state = ifelse(residence_state == "District Of Columbia", "District of Columbia", residence_state)
+  )
+
+
+head(medicare_data_modified)
+```
+#RECODING FOR CDC MORTAILITY DATA
+``` {r}
+
 
 ```
 
+#RECODING FOR CDC POPULATION DATA
+``` {r}
 
+
+```
