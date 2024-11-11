@@ -24,9 +24,14 @@ head(medicare_data)
 head(cdc_wonder_mortality_data)
 head(cdc_wonder_population_data)
 ```
+<<<<<<< HEAD
 ##RECODING COMMON VARIABLES TO BE COMBINED WITH OTHER DATA SETS and COVERTING PAYMENT VARIABLES TO NURMERIC
+=======
+##RECODING COMMON VARIABLES TO BE COMBINED WITH OTHER DATA SETS
+>>>>>>> bc3b1711642cb132c901903d0111239f2ed60b28
 
 #Renamed the first column to residence_state as is in the mortatility data sets, select the first three columns with totals on enrolemnt, utilisation  and payments, and remove the "UNITED STATES" row with totals. We have capitalised each word in the sate name bu converted them to lower case as is the case in the mortality dataset.
+#Removed dollar signs and commas from the program payments, then converted the column data to numeric.
 
 #Removed dollar signs and commas from the program payments, then converted the column variables to numeric.
 
