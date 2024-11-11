@@ -14,6 +14,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(readr)
+setwd("/home/rstudio/Project251/data_sets_for_milestone_3")
+
 medicare_data <- read_csv('medicare_data_cleaned.csv')
 medicaid_data <- read_csv('medicaid_data_cleaned.csv')
 cdc_wonder_mortality_data <- read_csv("cdc_wonder_mortality_data_cleaned.csv")
@@ -23,12 +25,11 @@ head(medicaid_data)
 head(medicare_data)
 head(cdc_wonder_mortality_data)
 head(cdc_wonder_population_data)
+
 ```
-<<<<<<< HEAD
+
 ##RECODING COMMON VARIABLES TO BE COMBINED WITH OTHER DATA SETS and COVERTING PAYMENT VARIABLES TO NURMERIC
 =======
-##RECODING COMMON VARIABLES TO BE COMBINED WITH OTHER DATA SETS
->>>>>>> bc3b1711642cb132c901903d0111239f2ed60b28
 
 #Renamed the first column to residence_state as is in the mortatility data sets, select the first three columns with totals on enrolemnt, utilisation  and payments, and remove the "UNITED STATES" row with totals. We have capitalised each word in the sate name bu converted them to lower case as is the case in the mortality dataset.
 #Removed dollar signs and commas from the program payments, then converted the column data to numeric.
@@ -60,12 +61,38 @@ str(medicare_data_modified)
 ```
 #RECODING FOR CDC MORTAILITY DATA
 ``` {r}
+mortality_modified <- cdc_wonder_mortality_data %>% 
+  filter(ten_year_age_groups %in% c('65-74 years', '75-84 years', '85+ years')) %>% 
+  select(residence_state, ten_year_age_groups, deaths)
+
+
+mortality_modified<- mortality_modified %>% 
+  group_by(residence_state, ten_year_age_groups) %>% 
+  summarize(total_deaths = sum(deaths), .groups = 'drop')
+
+head(mortality_modified)
+str(mortality_modified)
 
 
 ```
 
+```{r}
+mortality_65_plus <- mortality_modified %>% 
+  group_by(residence_state) %>% 
+  summarize(total_deaths_65_plus = sum(total_deaths), .groups = 'drop')
+
+head(mortality_65_plus)
+```
+
+
 #RECODING FOR CDC POPULATION DATA
 ``` {r}
 
+population_data_modified<- cdc_wonder_population_data %>%
+  rename(residence_state = state)  %>% 
+  filter(grepl('65|74|84|85+', ten_year_age_groups))
 
+
+head(population_data_modified)
+str(population_data_modified)
 ```
