@@ -15,8 +15,6 @@ library(readr)
 library(dplyr)
 library(janitor)
 
-setwd("/home/rstudio/Project251/milestone_2/data_sets_for_milestone_2")
-
 medicare_data_csv <- "kff_cms_medicare_state_summary.csv"
 medicare_data <- read_csv(
   file = medicare_data_csv,
@@ -54,7 +52,7 @@ Sources Centers for Medicare & Medicaid Services, Office of Enterprise Data and 
 
 #How does the dataset relate to the group problem statement and question?
 
-The dataset contains information on Medicare spending by state, which is a significant portion of public healthcare spending in the U.S. This data will help us quantify healthcare expenditures for each state, allowing us to explore whether states with higher or lower Medicare spending have different mortality rates. #Our problem statement is concerned with mortality rates. To explore the relationship, we shall combine the Medicare dataset with another dataset that provides mortality rates. We shall then analyze correlations between Medicare spending per state and mortality rates to see if there is an association. #We shall run a statistical analysis to determine if there’s a relationship between higher spending and lower mortality, or vice versa This will help in understanding whether states with lower public healthcare spending tend to have higher mortality rates.
+#The dataset contains information on Medicare spending by state, which is a significant portion of public healthcare spending in the U.S. This data will help us quantify healthcare expenditures for each state, allowing us to explore whether states with higher or lower Medicare spending have different mortality rates. #Our problem statement is concerned with mortality rates. To explore the relationship, we shall combine the Medicare dataset with another dataset that provides mortality rates. We shall then analyze correlations between Medicare spending per state and mortality rates to see if there is an association. #We shall run a statistical analysis to determine if there’s a relationship between higher spending and lower mortality, or vice versa This will help in understanding whether states with lower public healthcare spending tend to have higher mortality rates.
 
 #Import Process: We loaded the readr package: This package provides a fast and friendly way to read rectangular data like CSV files.
 
