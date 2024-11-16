@@ -364,7 +364,7 @@ further analysis.</p>
 <p>#We have chosen to use the medicare data (65+) to be prepared for
 merging with mortality and population data sets.</p>
 <pre class="r"><code>library(readr)
-setwd(&quot;/home/rstudio/Project251/data_sets_for_milestone_3&quot;)
+setwd(&quot;/home/rstudio/Project251/milestone_3/data_sets_for_milestone_3&quot;)
 
 medicare_data &lt;- read_csv(&#39;medicare_data_cleaned.csv&#39;)</code></pre>
 <pre><code>## Rows: 52 Columns: 10
@@ -763,6 +763,10 @@ each state (total deaths 65+ / total population 65+ * 1000).</td>
 </tr>
 </tbody>
 </table>
+<p>#Created csv files for the modified medicare and merged mortality
+rate data sets for use in Milestone 4</p>
+<pre class="r"><code>write.csv(medicare_data_modified, &quot;medicare_modified.csv&quot;, row.names = FALSE)
+write.csv(mortality_rate, &quot;mortality_rate.csv&quot;, row.names = FALSE)</code></pre>
 <p>###SUMMARY OF OUR WORK</p>
 <p>##Subset Rows or Columns as Needed Rubric Requirement: Subset the
 dataset to include only relevant rows and columns.</p>

@@ -219,7 +219,13 @@ data_dictionary <- read_excel("data_dictionary_project_milestone_3.xlsx")
 kable(data_dictionary, caption = "Data Dictionary for Milestone 3 Group 10")
 
 ```
+#Created csv files for the modified medicare and merged mortality rate data sets for use in Milestone 4
 
+```{r}
+write.csv(medicare_data_modified, "medicare_modified.csv", row.names = FALSE)
+write.csv(mortality_rate, "mortality_rate.csv", row.names = FALSE)
+
+```
 ###SUMMARY OF OUR WORK
 
 ##Subset Rows or Columns as Needed Rubric Requirement: Subset the
