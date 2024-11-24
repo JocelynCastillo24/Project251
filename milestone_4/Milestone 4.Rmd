@@ -8,18 +8,18 @@ date: "2024-11-16"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
 ```{r, warning=FALSE}
 library(readr)
+library(dplyr)
 
 setwd("/home/rstudio/Project251/milestone_4/data_sets_for_milestone_4")
 medicare_modified <- read_csv('medicare_modified.csv')
 mortality_rate <- read_csv('mortality_rate.csv')
 
-str(medicare_modified)
-str(mortality_rate)
+joined_data <- medicare_modified %>%
+  left_join(mortality_rate, by = "residence_state")
+
+str(joined_data)
+head(joined_data)
 
 ```
-
-
-
