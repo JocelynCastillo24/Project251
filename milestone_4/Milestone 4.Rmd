@@ -1,25 +1,188 @@
 ---
 title: "Milestone 4 Group 10"
-output: html_document
-date: "2024-11-16"
+output:  html_document
+date: "2024-11-25"
 ---
 
-```{r setup, include=FALSE}
+```{r global options, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, warning=FALSE}
+# We imported 2 csv files from Milestone 3 i.e., 1. medicare_modified that contains state level medicare enrolment, utilisation, total medicare spending and a spending per capita vairable. 2. mortality_rate that contains state level data on total deaths and total population for age groups 65 plus with a mortality rate per 1000 variable.
+
+```{r}
+
 library(readr)
 library(dplyr)
 
-setwd("/home/rstudio/Project251/milestone_4/data_sets_for_milestone_4")
-medicare_modified <- read_csv('medicare_modified.csv')
-mortality_rate <- read_csv('mortality_rate.csv')
+medicare_modified <- read_csv('./data_sets_for_milestone_4/medicare_modified.csv')
+mortality_rate <- read_csv('./data_sets_for_milestone_4/mortality_rate.csv')
 
 joined_data <- medicare_modified %>%
   left_join(mortality_rate, by = "residence_state")
 
 str(joined_data)
-head(joined_data)
+head(joined_data) 
 
 ```
+
+# Visualization 1: Boxplot of Mortality Rates by Expenditure Quartiles
+
+# This visualization divides states into four quartiles based on their per-person Medicare spending and shows the distribution of mortality rates within each quartile. It allows us to identify whether higher spending correlates with lower mortality rates by comparing the median and range of mortality rates across expenditure levels.
+
+```{r}
+library(knitr)
+library(kableExtra)
+library(ggplot2)
+library(plotly)
+library(stringr)
+
+# We Need to create quartiles for boxplot
+joined_data_quartiles <- joined_data %>% 
+  mutate(Expenditure_Quartile = ntile(medicare_spending_per_person, 4),
+         mortality_rate_per_1000 = round(mortality_rate_per_1000, 2)) %>% 
+  mutate(Expenditure_Quartile = case_when(
+    Expenditure_Quartile == 1 ~ "Q1",
+    Expenditure_Quartile == 2 ~ "Q2", 
+    Expenditure_Quartile == 3 ~ "Q3",
+    Expenditure_Quartile == 4 ~ "Q4"
+    ))
+
+head(joined_data_quartiles$Expenditure_Quartile)
+
+ggplot(joined_data_quartiles, aes(x = Expenditure_Quartile, y = mortality_rate_per_1000)) + 
+  geom_boxplot(fill = "lightblue", alpha = 0.7, outlier.color = "black") + 
+  labs(title = "Mortality Rates by Medicare Expenditure Quartiles", 
+       x = "Expenditure Quartiles",
+       y = "Mortality Rate (per 1,000)",
+       caption = "Data Source: Medicare and Mortality Datasets"
+       ) + 
+  theme_minimal()
+ 
+### Additional interactive plot 
+
+interactive_boxplot <- plot_ly(data = joined_data_quartiles, y = ~mortality_rate_per_1000, color = ~Expenditure_Quartile, type = "box") %>% 
+  layout(title = 'Mortality Rates by Medicare Expenditure Quartiles', 
+         xaxis = list(title = 'Expenditure Quartiles'), yaxis = list(title = 'Mortality Rate'))
+interactive_boxplot
+
+```
+
+# Visualisation 2: Table 1
+
+# This table lists the top 10 states with the highest mortality rates per 1000 people, alongside their Medicare spending and enrollment. It highlights states where mortality remains high despite significant Medicare expenditures, suggesting potential inefficiencies in healthcare spending or disparities in healthcare access.
+
+```{r}
+
+# Let us fix and edit column names for table 
+joined_data_clean <- joined_data %>% 
+  rename(
+    State = residence_state,
+    Medicare_Enrollees = total_traditional_medicare_part_a_and_or_part_b_enrollees,
+    Medicare_Utilization = total_medicare_part_a_and_or_part_b_persons_with_utilization,
+    Medicare_Spending = total_medicare_part_a_and_or_part_b_program_payments,
+    Spending_Per_Person = medicare_spending_per_person,
+    Mortality_Rate = mortality_rate_per_1000,
+    Total_Deaths_65Plus = total_deaths_65_plus,
+    Population_65Plus = total_population_65_plus
+  )
+
+
+data_table <- joined_data_clean %>% 
+  select(State, Medicare_Enrollees, Medicare_Spending, Mortality_Rate) %>% 
+  mutate(Mortality_Rate = round(Mortality_Rate, 2)) %>% 
+  arrange(desc(Mortality_Rate)) %>% 
+  head(10)
+
+
+medicare_data_table <- data_table %>% 
+   kable("html", col.names = c("State", "Medicare Enrollees", "Medicare Spending ($)", "Mortality Rate (per 1,000)"),
+        caption = "Top 10 States with Highest Mortality Rates and Medicare Spending") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE) %>%
+  footnote(general = "Data Source: Medicare and Mortality datasets")
+
+medicare_data_table
+  
+  
+```
+
+
+# Visualisation 3: Table 2: US Medicare Spending Per Capita and Mortality Rates; All states
+
+# This table provides a comprehensive overview of all states, displaying Medicare enrollees, Medicare utilization, spending per person, and mortality rate per 1000 people. It allows for state-by-state comparisons to identify patterns, outliers, or trends in spending and health outcomes.
+```{r}
+
+library(DT)
+library(dplyr)
+
+joined_data_clean <- joined_data_clean %>%
+  select(-Medicare_Spending, -Total_Deaths_65Plus, -Population_65Plus) %>%
+  rename(
+    `Spending Per Person ($)` = Spending_Per_Person,
+    `Mortality Rate per 1000` = Mortality_Rate,
+    `Medicare Enrollees` = Medicare_Enrollees,
+    `Medicare Utilization` = Medicare_Utilization
+  )
+
+joined_data_clean$'Spending Per Person ($)' <- round(joined_data_clean$'Spending Per Person ($)', 0)
+joined_data_clean$'Mortality Rate per 1000' <- round(joined_data_clean$'Mortality Rate per 1000', 0)
+
+datatable(
+  joined_data_clean,
+  rownames = FALSE, 
+  options = list(
+    dom = 'Bfrtip',                    
+    buttons = c('csv', 'excel', 'pdf'),
+    pageLength = 10,                
+    autoWidth = TRUE,                  
+    scrollX = TRUE,                    
+    columnDefs = list(
+      list(className = 'dt-center', targets = 1:4)
+    )
+  ),
+  extensions = c('Buttons'),           
+  class = "cell-border stripe",   
+  caption = "US Medicare Spending Per Capita and Mortality Rates"
+)
+
+```
+
+# Visualisation 4; Scatter Plot comparing Medicare spending and mortality rates
+
+# The scatter plot highlights the relationship between Medicare spending per person and mortality rates per 1000. It includes a red trendline to indicate the overall correlation, revealing whether higher spending results in better health outcomes (lower mortality rates) or if other factors influence this relationship.
+
+```{r}
+
+library(plotly)
+
+scatter_plot <- plot_ly(
+  data = joined_data_clean,
+  x = ~`Spending Per Person ($)`,               
+  y = ~`Mortality Rate per 1000`,               
+  type = 'scatter',
+  mode = 'markers',
+  marker = list(size = 10, color = 'blue', opacity = 0.7),  
+  text = ~paste(
+    "State: ", State, "<br>",
+    "Spending: $", `Spending Per Person ($)`, "<br>",
+    "Mortality Rate: ", `Mortality Rate per 1000`, " per 1000"
+  ),                                           
+  hoverinfo = 'text'                           
+) %>%
+  add_lines(
+    x = ~`Spending Per Person ($)`,
+    y = fitted(lm(`Mortality Rate per 1000` ~ `Spending Per Person ($)`, data = joined_data_clean)),
+    line = list(color = 'red', dash = 'dash'),
+    name = "Trendline"
+  ) %>%
+  layout(
+    title = "Relationship Between Medicare Spending and Mortality Rates",
+    xaxis = list(title = "Medicare Spending Per Person ($)"),
+    yaxis = list(title = "Mortality Rate (per 1000)"),
+    showlegend = FALSE
+  )
+
+scatter_plot
+
+```
+
