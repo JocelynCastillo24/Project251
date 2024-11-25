@@ -8,7 +8,7 @@ date: "2024-11-25"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# We imported 2 csv files from Milestone 3 i.e., 1. medicare_modified that contains state level medicare enrolment, utilisation, total medicare spending and a spending per capita vairable. 2. mortality_rate that contains state level data on total deaths and total population for age groups 65 plus with a mortality rate per 1000 variable.
+## We imported 2 csv files from Milestone 3 i.e., 1. medicare_modified, which contains state-level medicare enrolment, utilisation, total medicare spending, and a spending per capita comparable. 2. mortality_rate that contains state-level data on total deaths and total population for age groups 65 plus with a mortality rate per
 
 ```{r}
 
@@ -28,7 +28,7 @@ head(joined_data)
 
 # Visualization 1: Boxplot of Mortality Rates by Expenditure Quartiles
 
-# This visualization divides states into four quartiles based on their per-person Medicare spending and shows the distribution of mortality rates within each quartile. It allows us to identify whether higher spending correlates with lower mortality rates by comparing the median and range of mortality rates across expenditure levels.
+## This visualization divides states into four quartiles based on their per-person Medicare spending and shows the distribution of mortality rates within each quartile. It allows us to identify whether higher spending correlates with lower mortality rates by comparing the median and range of mortality rates across expenditure levels.
 
 ```{r}
 library(knitr)
@@ -68,9 +68,9 @@ interactive_boxplot
 
 ```
 
-# Visualisation 2: Table 1
+# Visualization 2: Table 1
 
-# This table lists the top 10 states with the highest mortality rates per 1000 people, alongside their Medicare spending and enrollment. It highlights states where mortality remains high despite significant Medicare expenditures, suggesting potential inefficiencies in healthcare spending or disparities in healthcare access.
+## This table lists the top 10 states with the highest mortality rates per 1000 people, alongside their Medicare spending and enrollment. It highlights states where mortality remains high despite significant Medicare expenditures, suggesting potential inefficiencies in healthcare spending or disparities in healthcare access.
 
 ```{r}
 
@@ -106,10 +106,10 @@ medicare_data_table
   
 ```
 
-
 # Visualisation 3: Table 2: US Medicare Spending Per Capita and Mortality Rates; All states
 
-# This table provides a comprehensive overview of all states, displaying Medicare enrollees, Medicare utilization, spending per person, and mortality rate per 1000 people. It allows for state-by-state comparisons to identify patterns, outliers, or trends in spending and health outcomes.
+## This table provides a comprehensive overview of all states, displaying Medicare enrollees, Medicare utilization, spending per person, and mortality rate per 1000 people. It allows for state-by-state comparisons to identify patterns, outliers, or trends in spending and health outcomes.
+
 ```{r}
 
 library(DT)
@@ -147,9 +147,9 @@ datatable(
 
 ```
 
-# Visualisation 4; Scatter Plot comparing Medicare spending and mortality rates
+# Visualization 4; Scatter Plot comparing Medicare spending and mortality rates
 
-# The scatter plot highlights the relationship between Medicare spending per person and mortality rates per 1000. It includes a red trendline to indicate the overall correlation, revealing whether higher spending results in better health outcomes (lower mortality rates) or if other factors influence this relationship.
+## The scatter plot highlights the relationship between Medicare spending per person and mortality rates per 1000. It includes a red trendline to indicate the overall correlation, revealing whether higher spending results in better health outcomes (lower mortality rates) or if other factors influence this relationship.
 
 ```{r}
 
@@ -185,4 +185,3 @@ scatter_plot <- plot_ly(
 scatter_plot
 
 ```
-
