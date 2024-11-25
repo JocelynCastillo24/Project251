@@ -1,0 +1,111 @@
+---
+title: "Milestone 4 Group 10"
+output: html_document
+date: "2024-11-25"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, warning=FALSE}
+library(readr)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(ggplot2)
+library(plotly)
+library(stringr)
+
+setwd("/home/rstudio/Project251/milestone_4/data_sets_for_milestone_4")
+medicare_modified <- read_csv('medicare_modified.csv')
+mortality_rate <- read_csv('mortality_rate.csv')
+
+joined_data <- medicare_modified %>%
+  left_join(mortality_rate, by = "residence_state")
+
+str(joined_data)
+head(joined_data) 
+
+```
+
+# Visualization 1: Boxplot of Mortality Rates by Expenditure Quartiles
+
+```{r}
+
+#Need to create quartiles for boxplot
+joined_data_quartiles <- joined_data %>% 
+  mutate(Expenditure_Quartile = ntile(medicare_spending_per_person, 4),
+         mortality_rate_per_1000 = round(mortality_rate_per_1000, 2)) %>% 
+  mutate(Expenditure_Quartile = case_when(
+    Expenditure_Quartile == 1 ~ "Q1",
+    Expenditure_Quartile == 2 ~ "Q2", 
+    Expenditure_Quartile == 3 ~ "Q3",
+    Expenditure_Quartile == 4 ~ "Q4"
+    ))
+
+head(joined_data_quartiles$Expenditure_Quartile)
+
+ggplot(joined_data_quartiles, aes(x = Expenditure_Quartile, y = mortality_rate_per_1000)) + 
+  geom_boxplot(fill = "lightblue", alpha = 0.7, outlier.color = "black") + 
+  labs(title = "Mortality Rates by Medicare Expenditure Quartiles", 
+       x = "Expenditure Quartiles",
+       y = "Mortality Rate (per 1,000)",
+       caption = "Data Source: Medicare and Mortality Datasets"
+       ) + 
+  theme_minimal()
+ 
+### Additional interactive plot 
+
+interactive_boxplot <- plot_ly(data = joined_data_quartiles, y = ~mortality_rate_per_1000, color = ~Expenditure_Quartile, type = "box") %>% 
+  layout(title = 'Mortality Rates by Medicare Expenditure Quartiles', 
+         xaxis = list(title = 'Expenditure Quartiles'), yaxis = list(title = 'Mortality Rate'))
+interactive_boxplot
+
+```
+
+# Visualization 2: Bar Chart
+
+```{r}
+
+
+
+```
+
+# Table 1
+
+```{r}
+
+# fix and edit column names for table 
+joined_data_clean <- joined_data %>% 
+  rename(
+    State = residence_state,
+    Medicare_Enrollees = total_traditional_medicare_part_a_and_or_part_b_enrollees,
+    Medicare_Utilization = total_medicare_part_a_and_or_part_b_persons_with_utilization,
+    Medicare_Spending = total_medicare_part_a_and_or_part_b_program_payments,
+    Spending_Per_Person = medicare_spending_per_person,
+    Mortality_Rate = mortality_rate_per_1000,
+    Total_Deaths_65Plus = total_deaths_65_plus,
+    Population_65Plus = total_population_65_plus
+  )
+
+# Select, mutate, arrange data for the table
+data_table <- joined_data_clean %>% 
+  select(State, Medicare_Enrollees, Medicare_Spending, Mortality_Rate) %>% 
+  mutate(Mortality_Rate = round(Mortality_Rate, 2)) %>% 
+  arrange(desc(Mortality_Rate)) %>% 
+  head(10)
+
+#kable package for table
+
+medicare_data_table <- data_table %>% 
+   kable("html", col.names = c("State", "Medicare Enrollees", "Medicare Spending ($)", "Mortality Rate (per 1,000)"),
+        caption = "Top 10 States with Highest Mortality Rates and Medicare Spending") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE) %>%
+  footnote(general = "Data Source: Medicare and Mortality datasets")
+
+medicare_data_table
+  
+  
+```
+
