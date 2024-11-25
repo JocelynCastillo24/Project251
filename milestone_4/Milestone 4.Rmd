@@ -8,7 +8,7 @@ date: "2024-11-25"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## We imported 2 csv files from Milestone 3 i.e., 1. medicare_modified, which contains state-level medicare enrolment, utilisation, total medicare spending, and a spending per capita comparable. 2. mortality_rate that contains state-level data on total deaths and total population for age groups 65 plus with a mortality rate per
+## We imported 2 csv files from Milestone 3 i.e., 1. medicare_modified, which contains state-level medicare enrolment, utilisation, total medicare spending, and a spending per capita comparable. 2. mortality_rate that contains state-level merged data on total deaths and total population for age groups 65 plus with a mortality rate per 1000 comparale.
 
 ```{r}
 
