@@ -1,0 +1,229 @@
+---
+title: "Milestone 5"
+output: html_document
+date: "2024-12-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## **Project Milestone #5 Draft**
+
+#### **Problem Statement**
+
+Our project seeks to examine whether there exists a correlation between Medicare spending and mortality rates across states for individuals aged 65 and older in the United States. Our goal is to provide actionable insights to policymakers in the future allocation of Medicare funding to reduce mortality rates effectively. By combining, analyzing, and using the given publicly available data, we seek to identify and highlight particular states with higher mortality rates and lower Medicare spending to spotlight the particular disparities that may benefit from future targeted interventions.
+
+#### **Methods**
+
+***Data Sources***
+
+The data sources that we are using for our analysis come from the Kaiser Family Foundation (KFF) and CDC Wonder. From the KFF datasets are broken up into Medicare, which focuses on adults 65 and older that contain data at the state-level on enrollment, utilization, spending, etc. The other KFF dataset we have access to is about Medicaid. This dataset includes a lot of the same data from the Medicare one, but just focusing on a different age range. Both of these datasets are from the year 2021. The CDC datasets are focused on mortality and population numbers in the year 2021. These datasets will be used in tandem to calculate mortality rates, healthcare spending, etc to answer our research question. 
+
+***Data Cleaning***
+
+The Kaiser Family Foundation Medicaid and Medicare datasets were cleaned by having each of the column names changed into characters and cleaned for easier readability and wrangling. The CDC Wonder Mortality datasets were also cleaned and prepared the same by having their column names cleaned to match each other. 
+
+***Analytic Methods and Variable Creation***
+
+The Medicare dataset had the medicare spending column changed from a character to a number value in order to calculate and create a new variable called “medicare_spending_per_person”. This variable was created by dividing the total spending by the number of total enrollees. 
+
+The Mortality dataset was filtered to only include individuals over the age of 65 and created 3 different distinct age categories of '65-74 years', '75-84 years', '85+ years. Afterwards, we created an aggregate mortality count for each state by grouping and summarizing those in each age range. Lastly, we created a new variable called “total_deaths_65_plus” for the cumulative amount of deaths in the 65+ age group.
+
+For the Population dataset, we renamed the state variable to match our other dataset for easier joining later on. We mutated the column names for consistent formatting and capitalization. Age ranges were then filtered to be similar to the Mortality dataset created earlier. After grouping by residence state, we created a new variable called “total_population_65_plus” to merge later on with the other dataset.
+
+After our two variables were created, we merged the two datasets together using a left_join. We joined each dataset with the common column of “residence_state”. 
+
+Next, we created our “mortality_rate” variable per 1000 by doing “(total_deaths_65_plus / total_population_65_plus) \* 1000)” After this, we performed simple statistics on the data to get the mean, median, mode, and range. We also use the kable package to create a table of these results and to show what our merged dataset showed us. Visualizations for our analysis included a boxplot, scatterplot, and two tables. 
+
+#### **Results**
+
+The analysis revealed several insights into the relationship between Medicare spending and mortality rate across US states:
+
+1.  **Boxplot of Mortality Rates by Medicare Expenditure Quartiles:**
+
+    -   The boxplot categorizes states into quartiles based on Medicare spending per person, revealing variations in mortality rates across spending levels.
+
+    -   States in the highest quartile (Q4) exhibited a wider range of mortality rates compared to other quartiles, with some states achieving lower rates but others still facing relatively high mortality. 
+
+**Figure 1: Boxplot of Mortality Rates by Expenditure Quartiles**
+
+```{r}
+library(readr)
+library(dplyr)
+
+medicare_modified <- read_csv('./data_sets_for_milestone_5/medicare_modified.csv')
+mortality_rate <- read_csv('./data_sets_for_milestone_5/mortality_rate.csv')
+
+joined_data <- medicare_modified %>%
+  left_join(mortality_rate, by = "residence_state")
+
+str(joined_data)
+head(joined_data) 
+
+library(knitr)
+library(kableExtra)
+library(ggplot2)
+library(plotly)
+library(stringr)
+
+joined_data_quartiles <- joined_data %>% 
+  mutate(Expenditure_Quartile = ntile(medicare_spending_per_person, 4),
+         mortality_rate_per_1000 = round(mortality_rate_per_1000, 2)) %>% 
+  mutate(Expenditure_Quartile = case_when(
+    Expenditure_Quartile == 1 ~ "Q1",
+    Expenditure_Quartile == 2 ~ "Q2", 
+    Expenditure_Quartile == 3 ~ "Q3",
+    Expenditure_Quartile == 4 ~ "Q4"
+    ))
+
+head(joined_data_quartiles$Expenditure_Quartile)
+
+ggplot(joined_data_quartiles, aes(x = Expenditure_Quartile, y = mortality_rate_per_1000)) + 
+  geom_boxplot(fill = "lightblue", alpha = 0.7, outlier.color = "black") + 
+  labs(title = "Mortality Rates by Medicare Expenditure Quartiles", 
+       x = "Expenditure Quartiles",
+       y = "Mortality Rate (per 1,000)",
+       caption = "Data Source: Medicare and Mortality Datasets"
+       ) + 
+  theme_minimal()
+ 
+### Additional interactive plot 
+
+interactive_boxplot <- plot_ly(data = joined_data_quartiles, y = ~mortality_rate_per_1000, color = ~Expenditure_Quartile, type = "box") %>% 
+  layout(title = 'Mortality Rates by Medicare Expenditure Quartiles', 
+         xaxis = list(title = 'Expenditure Quartiles'), yaxis = list(title = 'Mortality Rate'))
+interactive_boxplot
+```
+
+<!-- -->
+
+2.  **Top 10 States with the Highest Mortality Rates:**
+
+    -   A table highlighting the highest mortality rates per 1,000 people, including West Virginia, Mississippi, and Oklahoma. These states also demonstrate varying levels of Medicare spending, with some investing significant funds but still experiencing high mortality rates. This disparity points to potential inefficiencies or challenges in healthcare access and quality in these regions.
+
+**Figure 2: Top 10 States with the Highest Mortality Rates**
+
+```{r}
+joined_data_clean <- joined_data %>% 
+  rename(
+    State = residence_state,
+    Medicare_Enrollees = total_traditional_medicare_part_a_and_or_part_b_enrollees,
+    Medicare_Utilization = total_medicare_part_a_and_or_part_b_persons_with_utilization,
+    Medicare_Spending = total_medicare_part_a_and_or_part_b_program_payments,
+    Spending_Per_Person = medicare_spending_per_person,
+    Mortality_Rate = mortality_rate_per_1000,
+    Total_Deaths_65Plus = total_deaths_65_plus,
+    Population_65Plus = total_population_65_plus
+  )
+
+
+data_table <- joined_data_clean %>% 
+  select(State, Medicare_Enrollees, Medicare_Spending, Mortality_Rate) %>% 
+  mutate(Mortality_Rate = round(Mortality_Rate, 2)) %>% 
+  arrange(desc(Mortality_Rate)) %>% 
+  head(10)
+
+
+medicare_data_table <- data_table %>% 
+   kable("html", col.names = c("State", "Medicare Enrollees", "Medicare Spending ($)", "Mortality Rate (per 1,000)"),
+        caption = "Top 10 States with Highest Mortality Rates and Medicare Spending") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE) %>%
+  footnote(general = "Data Source: Medicare and Mortality datasets")
+
+medicare_data_table
+```
+
+3.  **Medicare Spending Per Capita and Mortality Rates Across All States:**
+
+    -   The state-by-state comparison table provides a comprehensive overview of Medicare enrollees, spending, and mortality rates. It allows for identifying outliers, such as states with relatively low spending but better health outcomes, or states with high spending and poor outcomes.
+
+**Figure 3: Medicare Spending Per Capita and Mortality Rates for All 50 States**
+
+```{r}
+library(DT)
+library(dplyr)
+
+joined_data_clean <- joined_data_clean %>%
+  select(-Medicare_Spending, -Total_Deaths_65Plus, -Population_65Plus) %>%
+  rename(
+    `Spending Per Person ($)` = Spending_Per_Person,
+    `Mortality Rate per 1000` = Mortality_Rate,
+    `Medicare Enrollees` = Medicare_Enrollees,
+    `Medicare Utilization` = Medicare_Utilization
+  )
+
+joined_data_clean$'Spending Per Person ($)' <- round(joined_data_clean$'Spending Per Person ($)', 0)
+joined_data_clean$'Mortality Rate per 1000' <- round(joined_data_clean$'Mortality Rate per 1000', 0)
+
+datatable(
+  joined_data_clean,
+  rownames = FALSE, 
+  options = list(
+    dom = 'Bfrtip',                    
+    buttons = c('csv', 'excel', 'pdf'),
+    pageLength = 10,                
+    autoWidth = TRUE,                  
+    scrollX = TRUE,                    
+    columnDefs = list(
+      list(className = 'dt-center', targets = 1:4)
+    )
+  ),
+  extensions = c('Buttons'),           
+  class = "cell-border stripe",   
+  caption = "US Medicare Spending Per Capita and Mortality Rates"
+)
+```
+
+4.  **Scatterplot Highlighting the Relationship Between Spending and Mortality:**
+
+    -   The scatterplot illustrates the correlation between Medicare spending per person and mortality rates. The red trendline shows a slight positive trend, suggesting that higher spending is not strongly associated with reduced mortality. Some states with high spending still experience elevated mortality rates, indicating that factors beyond spending may be at play. 
+
+**Figure 4: Relationship Between Medicare Spending Per Person and Mortality Rates per 1,000 Individuals**
+
+```{r}
+library(plotly)
+
+scatter_plot <- plot_ly(
+  data = joined_data_clean,
+  x = ~`Spending Per Person ($)`,               
+  y = ~`Mortality Rate per 1000`,               
+  type = 'scatter',
+  mode = 'markers',
+  marker = list(size = 10, color = 'blue', opacity = 0.7),  
+  text = ~paste(
+    "State: ", State, "<br>",
+    "Spending: $", `Spending Per Person ($)`, "<br>",
+    "Mortality Rate: ", `Mortality Rate per 1000`, " per 1000"
+  ),                                           
+  hoverinfo = 'text'                           
+) %>%
+  add_lines(
+    x = ~`Spending Per Person ($)`,
+    y = fitted(lm(`Mortality Rate per 1000` ~ `Spending Per Person ($)`, data = joined_data_clean)),
+    line = list(color = 'red', dash = 'dash'),
+    name = "Trendline"
+  ) %>%
+  layout(
+    title = "Relationship Between Medicare Spending and Mortality Rates",
+    xaxis = list(title = "Medicare Spending Per Person ($)"),
+    yaxis = list(title = "Mortality Rate (per 1000)"),
+    showlegend = FALSE
+  )
+
+scatter_plot
+```
+
+#### **Discussion (interpretation of results)**
+
+The findings from this analysis provide valuable insights into the relationship between Medicare spending and mortality rates, while also highlighting areas for further exploration:
+
+1.  **Spending and Health Outcomes:** The visualizations, particularly the boxplot and scatterplot, highlight the relationship between Medicare spending and mortality rates. The scatterplot illustrates a slight positive trend, indicating that higher spending does not necessarily correlate with consistently lower mortality rates. Similarly, the boxplot shows variability within spending quartiles and mortality rates, with some states in the highest quartile (Q4) still experiencing high mortality. These patterns suggest that factors beyond spending influence health outcomes and mortality rates. 
+
+2.  **Potential Disparities Across States:** Our data, specifically the table of the “Top 10 States with the Highest Mortality Rates”, shows that states with high mortality rates do not always align with their Medicare spending levels. For example, Ohio stands out as a state  that demonstrates substantial spending (\$13,045,771,320) and yet has a relatively high mortality rate of 50.87 per 1,000 people. This aligns with the observation that high spending does not always correspond to lower mortality rates, suggesting that states with high mortality rates despite moderate or substantial Medicare spending may face additional barriers that are not captured in this analysis. These barriers could include systemic disparities such as limited access to healthcare, socioeconomic challenges, or higher burdens of chronic disease. 
+
+The results suggest that simply increasing Medicare spending may not consistently lead to improved health outcomes. Policymakers could benefit from targeted interventions aimed at addressing underlying factors' contributing to mortality in specific regions. For example, efforts to improve access to healthcare, enhance preventive services, and address social determinants of health could be more effective strategies for reducing mortality rates. 
+
+Our analysis focuses on aggregate state-level data for 2021, which may hinder important state differences or trends over time. Additionally, the data does not include other key factors, such as provider availability, urban-rural differences, or specific health behaviors that could affect mortality outcomes. 
+
+Future research could incorporate additional variables to better understand the drivers of disparities in health outcomes. Additionally, examining trends over multiple years could provide insights into whether certain policies or spending strategies have been effective in reducing mortality rates. 
