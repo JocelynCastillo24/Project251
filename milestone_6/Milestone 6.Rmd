@@ -1,11 +1,11 @@
 ---
 title: "Milestone 6"
-output: html_document
+output:  html_document
 date: "2024-12-07"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message=FALSE, warning=FALSE, echo=FALSE)
 ```
 
 ### **Project Milestone #6**
@@ -54,8 +54,8 @@ mortality_rate <- read_csv('./data_sets_for_milestone_6/mortality_rate.csv')
 joined_data <- medicare_modified %>%
   left_join(mortality_rate, by = "residence_state")
 
-str(joined_data)
-head(joined_data) 
+#str(joined_data)
+#head(joined_data) 
 
 library(knitr)
 library(kableExtra)
