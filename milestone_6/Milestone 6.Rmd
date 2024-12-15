@@ -83,7 +83,7 @@ interactive_boxplot
 
 <!-- -->
 
-### **Medicare Spending Per Capita and Mortality Rates Across All States:**
+### **Medicare Spending Per Capita and Mortality Rates Across All US States in 2021:**
 
 The state-by-state comparison in **Table 1** provides a detailed look at Medicare enrollees, per-person spending, and mortality rates across all 50 U.S. states. Notable examples include **Alaska**, which spends \$9,939 per person and achieves a relatively low mortality rate of 34 per 1,000. Conversely, **Mississippi** spends \$11,428 per person, yet its mortality rate remains high at 54 per 1,000.
 
