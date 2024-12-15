@@ -1,5 +1,5 @@
 ---
-title: "Milestone 6"
+title: "Project Milestone 6"
 output:  html_document
 date: "2024-12-07"
 ---
@@ -8,7 +8,7 @@ date: "2024-12-07"
 knitr::opts_chunk$set(message=FALSE, warning=FALSE, echo=FALSE)
 ```
 
-### **Project Milestone #6**
+### **Medicare Spending vs. Mortality: Identifying Patterns and Disparities Across US States**
 
 #### **Problem Statement**
 
@@ -72,8 +72,6 @@ joined_data_quartiles <- joined_data %>%
     Expenditure_Quartile == 3 ~ "Q3",
     Expenditure_Quartile == 4 ~ "Q4"
     ))
-
-head(joined_data_quartiles$Expenditure_Quartile)
  
 ### Additional interactive plot 
 
@@ -193,12 +191,7 @@ The state-by-state comparison in **Table 1** shows that high Medicare spending d
 
 These findings suggest that higher spending alone does not guarantee better health outcomes. States with high mortality rates may face systemic challenges, such as disparities in healthcare access, socioeconomic barriers, or chronic disease burdens. Addressing these factors likely requires targeted interventions beyond simply increasing Medicare spending.
 
-**Policy Implications and Limitations**
+**Policy Implications**
 
 The results suggest that simply increasing Medicare spending may not consistently lead to improved health outcomes. Policymakers could focus on targeted interventions aimed at addressing underlying factors', such as improving healthcare access, enhance preventive services, and addressing social determinants of health, to reduce mortality rates more effectively. 
 
-This analysis uses aggregate state-level data for 2021, which may obscure within-state differences or trends. Additionally, factors like provider availability, urban-rural disparities, and health behaviors were not included but may significantly affect mortality outcomes.
-
-**Future Directions**
-
-Future research could incorporate additional variables to better understand the drivers of disparities in health outcomes. Additionally, examining trends over multiple years could provide insights into whether certain policies or spending strategies have been effective in reducing mortality rates. 
